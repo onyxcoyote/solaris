@@ -23,6 +23,7 @@ import StatisticsService from "./statistics";
 
 import EventEmitter from "events";
 
+
 export const CombatServiceEvents = {
     onPlayerCombatStar: 'onPlayerCombatStar',
     onPlayerCombatCarrier: 'onPlayerCombatCarrier'

@@ -9,6 +9,7 @@ import { GameHistory, GameHistoryCarrier } from './types/GameHistory';
 import GameService from './game';
 import PlayerService from './player';
 import PlayerStatisticsService from './playerStatistics';
+import StatisticsService from "./statistics";
 
 export default class HistoryService {
     historyRepo: Repository<GameHistory>;
@@ -16,6 +17,7 @@ export default class HistoryService {
     gameService: GameService;
     playerStatisticsService: PlayerStatisticsService;
     gameStateService: GameStateService;
+    statisticsService: StatisticsService;
 
     constructor(
         historyRepo: Repository<GameHistory>,
@@ -23,12 +25,14 @@ export default class HistoryService {
         gameService: GameService,
         playerStatisticsService: PlayerStatisticsService,
         gameStateService: GameStateService,
+        statisticsService: StatisticsService,
     ) {
         this.historyRepo = historyRepo;
         this.playerService = playerService;
         this.gameService = gameService;
         this.playerStatisticsService = playerStatisticsService;
         this.gameStateService = gameStateService;
+        this.statisticsService = statisticsService;
 
         this.gameService.on('onGameDeleted', (args) => this.deleteByGameId(args.gameId));
     }
@@ -84,6 +88,8 @@ export default class HistoryService {
             'players.research.experimentation.level': 1,
             'players.research.terraforming.level': 1,
             'players.research.specialists.level': 1,
+            'players.combatStatistics.losses.ships': 1,
+            'players.combatStatistics.kills.ships': 1,
         }, { 
             tick: 1 
         });
@@ -113,8 +119,18 @@ export default class HistoryService {
             carriers: []
         };
 
+        //statslices has some of the data needed to snapshot for gamehistories
+        const statSlicesAllPlayers = await this.statisticsService.getSlicesForGame(game._id);
+
         history.players = game.galaxy.players.map(player => {
             let stats = this.playerStatisticsService.getStats(game, player);
+
+            //gap: AI players do not have statslices, so the playerSlice will be null and all intel values will be 0.
+            // one option is start storing statslice for AI players for the match
+            // another option is to calculate all of the intel values coming from statslice in another way
+            //gap: no intel stats are captured new player games
+            const playerSlice = statSlicesAllPlayers.find(slice => slice.playerId.equals(player._id));
+            let intelStats = this.playerStatisticsService.getIntelStats(playerSlice?.stats);
 
             return {
                 userId: player.userId,
@@ -132,6 +148,14 @@ export default class HistoryService {
                     totalCarrierSpecialists: stats.totalCarrierSpecialists,
                     newShips: stats.newShips,
                     warpgates: stats.warpgates
+                },
+                combatStatistics: {
+                    kills: {
+                        ships: intelStats.kills.ships,
+                    },
+                    losses: {
+                        ships: intelStats.losses.ships,
+                    },
                 },
                 alias: player.alias,
                 avatar: player.avatar,

@@ -21,6 +21,14 @@ export interface GameHistoryPlayer {
         newShips: number;
         warpgates: number;
     },
+    combatStatistics: {
+        kills: {
+            ships: number,
+        },
+        losses: {
+            ships: number,
+        },
+    }
     alias: string;
     avatar: string | null;
     researchingNow: ResearchTypeNotRandom;

@@ -201,7 +201,7 @@ export default (config: Config,
     const starService = new StarService(gameRepository, randomService, nameService, distanceService, starDistanceService, technologyService, specialistService, userService, gameTypeService, gameStateService, statisticsService, starDataService);
     const carrierService = new CarrierService(gameRepository, distanceService, starService, technologyService, specialistService);
     const shipService = new ShipService(starService, technologyService, carrierService);
-    const playerStatisticsService = new PlayerStatisticsService(starService, carrierService, technologyService, specialistService, shipService);
+    const playerStatisticsService = new PlayerStatisticsService(starService, carrierService, technologyService, specialistService, shipService, statisticsService);
     const playerCycleRewardsService = new PlayerCycleRewardsService(starService, technologyService, playerStatisticsService, specialistService, starDataService);
     const diplomacyUpkeepService = new DiplomacyUpkeepService(playerCreditsService, playerCycleRewardsService);
     const diplomacyService = new DiplomacyService(gameRepository, eventRepository, diplomacyUpkeepService)
@@ -238,7 +238,7 @@ export default (config: Config,
     const leaderboardService = new LeaderboardService(playerService, playerAfkService, userLevelService, ratingService, gameService, gameTypeService, gameStateService, badgeService, playerStatisticsService, teamService);
     const userLeaderboardService = new UserLeaderboardService(userRepository, guildUserService);
     const combatService = new CombatService(technologyService, specialistService, playerService, starService, reputationService, diplomacyService, gameTypeService, starCaptureService, statisticsService);
-    const historyService = new HistoryService(historyRepository, playerService, gameService, playerStatisticsService, gameStateService);
+    const historyService = new HistoryService(historyRepository, playerService, gameService, playerStatisticsService, gameStateService, statisticsService);
     const waypointActionService = new WaypointActionService();
     const waypointService = new WaypointService<DBObjectId>(starService as any, distanceService, starDistanceService, technologyService, carrierTravelService, starDataService); // todo: fix any once we consolidate common lib and server types
     const cullWaypointsService = new CullWaypointsService(gameRepository, starService, playerService, waypointService, carrierTravelService, starDataService);

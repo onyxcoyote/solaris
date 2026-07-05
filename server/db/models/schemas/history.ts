@@ -24,6 +24,14 @@ const schema = new Schema({
                 newShips: { type: Types.Number, required: true, default: 0 },
                 warpgates: { type: Types.Number, required: true, default: 0 }
             },
+            combatStatistics: {
+                kills: {
+                    ships: { type: Types.Number, required: true, default: 0 },
+                },
+                losses: {
+                    ships: { type: Types.Number, required: true, default: 0 },
+                },
+            },
             alias: { type: Types.String, required: true },
             avatar: { type: Types.String, required: false, default: null },
             researchingNow: { type: Types.String, required: true },

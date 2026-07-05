@@ -5,9 +5,11 @@ import { Star } from './types/Star';
 import CarrierService from './carrier';
 import SpecialistService from './specialist';
 import StarService from './star';
-import { TechnologyService } from 'solaris-common';
+import { TechnologyService, Statistics } from 'solaris-common';
 import { PlayerStatistics } from './types/Leaderboard';
+import { PlayerIntelStatistics } from './types/playerIntelStatistics';
 import ShipService from './ship';
+import StatisticsService from "./statistics";
 
 export default class PlayerStatisticsService {
     starService: StarService;
@@ -15,22 +17,25 @@ export default class PlayerStatisticsService {
     technologyService: TechnologyService;
     specialistService: SpecialistService;
     shipService: ShipService;
+    statisticsService: StatisticsService;
 
     constructor(
         starService: StarService,
         carrierService: CarrierService,
         technologyService: TechnologyService,
         specialistService: SpecialistService,
-        shipService: ShipService
+        shipService: ShipService,
+        statisticsService: StatisticsService
     ) {
         this.starService = starService;
         this.carrierService = carrierService;
         this.technologyService = technologyService;
         this.specialistService = specialistService;
         this.shipService = shipService;
+        this.statisticsService = statisticsService;
     }
 
-    getStats(game: Game, player: Player): PlayerStatistics {
+    getStats(game: Game, player: Player): PlayerStatistics { 
         const playerStars = this.starService.listStarsOwnedByPlayer(game.galaxy.stars, player._id);
         const playerCarriers = this.carrierService.listCarriersOwnedByPlayer(game.galaxy.carriers, player._id);
 
@@ -54,6 +59,17 @@ export default class PlayerStatisticsService {
             totalStarSpecialists,
             totalCarrierSpecialists,
             totalSpecialists: totalStarSpecialists + totalCarrierSpecialists,
+        };
+    }
+
+    getIntelStats(gameHistStats: Statistics | undefined): PlayerIntelStatistics {
+        return {
+            kills: {
+                ships: gameHistStats?.combat.kills.ships ?? 0,
+            },
+            losses: {
+                ships: gameHistStats?.combat.losses.ships ?? 0,
+            },
         };
     }
 

@@ -31,6 +31,8 @@
           <option key="experimentation" value="experimentation">Experimentation</option>
           <option key="terraforming" value="terraforming">Terraforming</option>
           <option key="specialists" value="specialists" v-if="isSpecialistsTechnologyEnabled">Specialists</option>
+          <option key="shipLosses" value="shipLosses">Ship Losses</option>
+          <option key="shipKills" value="shipKills">Ship Kills</option>
         </select>
         </div>
         <div class="col-auto ms-1">
@@ -122,7 +124,7 @@ type PlayerFilter = {
   colour: string
 };
 
-type IntelType = keyof IntelPlayer<string>['statistics'] | keyof IntelPlayer<string>['research'];
+type IntelType = keyof IntelPlayer<string>['statistics'] | keyof IntelPlayer<string>['research'] | keyof IntelPlayer<string>['combatStatistics'];
 
 const props = defineProps<{
   compareWithPlayerId?: string
@@ -226,7 +228,13 @@ const fillData = () => {
         case 'terraforming':
         case 'specialists':
           dataset.data.push(historyPlayer.research[intelType.value].level);
-          break
+          break;
+        case 'shipLosses':
+          dataset.data.push(historyPlayer.combatStatistics.losses.ships);
+          break;
+        case 'shipKills':
+          dataset.data.push(historyPlayer.combatStatistics.kills.ships);
+          break;
         default:
           dataset.data.push(historyPlayer.statistics[intelType.value] || 0);
       }

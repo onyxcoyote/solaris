@@ -5,6 +5,7 @@ import {Game} from "./types/Game";
 import {logger} from "../utils/logging";
 import UserService from "./user";
 
+
 const EMPTY_STATS: Statistics = {
     combat: {
         kills: {
@@ -85,10 +86,18 @@ export default class StatisticsService {
         });
     }
 
-    async _getSlicesForGame(gameId: DBObjectId): Promise<StatsSlice<DBObjectId>[]> {
+    //renamed to clarify open vs open+closed methods. This is used only within this class to get open slices in order to close them
+    async _getOpenSlicesForGame(gameId: DBObjectId): Promise<StatsSlice<DBObjectId>[]> {
         return this.statsSliceRepository.find({
             gameId,
             closed: false,
+        });
+    }
+
+    //historyService needs both open slices (and closed slices on last turn after win but before retrieving stats) to store for intel charts
+    async getSlicesForGame(gameId: DBObjectId): Promise<StatsSlice<DBObjectId>[]> {
+        return this.statsSliceRepository.find({
+            gameId
         });
     }
 
@@ -106,7 +115,7 @@ export default class StatisticsService {
     }
 
     async closeStatsSlicesForGame(game: Game) {
-        const slices = await this._getSlicesForGame(game._id);
+        const slices = await this._getOpenSlicesForGame(game._id);
 
         const bulkOps = slices.map(slice => ({
             updateOne: {
