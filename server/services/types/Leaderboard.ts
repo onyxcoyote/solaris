@@ -19,6 +19,12 @@ export interface PlayerStatistics {
     totalSpecialists: number;
 };
 
+export interface PlayerIntelStatistics {
+    shipKills: number,
+    shipLosses: number,
+    //scienceGenerated: number,
+};
+
 export interface LeaderboardPlayer {
     player: Player;
     stats: PlayerStatistics;

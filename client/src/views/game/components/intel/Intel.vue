@@ -124,7 +124,7 @@ type PlayerFilter = {
   colour: string
 };
 
-type IntelType = keyof IntelPlayer<string>['statistics'] | keyof IntelPlayer<string>['research'] | keyof IntelPlayer<string>['combatStatistics'];
+type IntelType = keyof IntelPlayer<string>['statistics'] | keyof IntelPlayer<string>['research'] | keyof IntelPlayer<string>['intelStatistics'];
 
 const props = defineProps<{
   compareWithPlayerId?: string
@@ -230,10 +230,8 @@ const fillData = () => {
           dataset.data.push(historyPlayer.research[intelType.value].level);
           break;
         case 'shipLosses':
-          dataset.data.push(historyPlayer.combatStatistics.losses.ships);
-          break;
         case 'shipKills':
-          dataset.data.push(historyPlayer.combatStatistics.kills.ships);
+          dataset.data.push(historyPlayer.intelStatistics[intelType.value]);
           break;
         default:
           dataset.data.push(historyPlayer.statistics[intelType.value] || 0);

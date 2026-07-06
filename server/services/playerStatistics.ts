@@ -6,8 +6,7 @@ import CarrierService from './carrier';
 import SpecialistService from './specialist';
 import StarService from './star';
 import { TechnologyService, Statistics } from 'solaris-common';
-import { PlayerStatistics } from './types/Leaderboard';
-import { PlayerIntelStatistics } from './types/playerIntelStatistics';
+import { PlayerStatistics, PlayerIntelStatistics } from './types/Leaderboard';
 import ShipService from './ship';
 import StatisticsService from "./statistics";
 
@@ -62,14 +61,11 @@ export default class PlayerStatisticsService {
         };
     }
 
+    //stats that aren't needed for "leaderboard stuff" and are more costly to retrieve (can't be derived from game state data in memory... things like combat losses data in statistics/gamehistory)
     getIntelStats(gameHistStats: Statistics | undefined): PlayerIntelStatistics {
         return {
-            kills: {
-                ships: gameHistStats?.combat.kills.ships ?? 0,
-            },
-            losses: {
-                ships: gameHistStats?.combat.losses.ships ?? 0,
-            },
+            shipKills: gameHistStats?.combat?.kills?.ships ?? 0,
+            shipLosses: gameHistStats?.combat?.losses?.ships ?? 0,
         };
     }
 

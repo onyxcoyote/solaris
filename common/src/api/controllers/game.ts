@@ -10,7 +10,7 @@ import type {
 } from "../../types/common/game";
 import { type Tutorial } from "../../types/common/tutorial";
 import { type PlayerResearch } from "../../types/common/player";
-import { type PlayerStatistics } from "../../types/common/leaderboard";
+import { type PlayerStatistics, type PlayerIntelStatistics } from "../../types/common/leaderboard";
 import { type UserRoles } from "../../types/common/user";
 
 export type GameSettingsGalaxyUnparsed = GameSettingsGalaxyBase & {
@@ -75,6 +75,7 @@ export type IntelPlayer<ID> = {
     playerId: ID,
     statistics: PlayerStatistics,
     research: PlayerResearch,
+    intelStatistics: PlayerIntelStatistics,
 }
 
 export type Intel<ID> = {

@@ -88,8 +88,8 @@ export default class HistoryService {
             'players.research.experimentation.level': 1,
             'players.research.terraforming.level': 1,
             'players.research.specialists.level': 1,
-            'players.combatStatistics.losses.ships': 1,
-            'players.combatStatistics.kills.ships': 1,
+            'players.intelStatistics.shipLosses': 1,
+            'players.intelStatistics.shipKills': 1,
         }, { 
             tick: 1 
         });
@@ -128,7 +128,6 @@ export default class HistoryService {
             //gap: AI players do not have statslices, so the playerSlice will be null and all intel values will be 0.
             // one option is start storing statslice for AI players for the match
             // another option is to calculate all of the intel values coming from statslice in another way
-            //gap: no intel stats are captured new player games
             const playerSlice = statSlicesAllPlayers.find(slice => slice.playerId.equals(player._id));
             let intelStats = this.playerStatisticsService.getIntelStats(playerSlice?.stats);
 
@@ -149,13 +148,9 @@ export default class HistoryService {
                     newShips: stats.newShips,
                     warpgates: stats.warpgates
                 },
-                combatStatistics: {
-                    kills: {
-                        ships: intelStats.kills.ships,
-                    },
-                    losses: {
-                        ships: intelStats.losses.ships,
-                    },
+                intelStatistics: {
+                    shipKills: intelStats.shipKills,
+                    shipLosses: intelStats.shipLosses,
                 },
                 alias: player.alias,
                 avatar: player.avatar,
